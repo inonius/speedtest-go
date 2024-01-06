@@ -7,10 +7,13 @@ COPY ./ ./
 RUN go build -ldflags "-w -s" -trimpath -o speedtest .
 
 FROM alpine:3.16
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates libcap
 WORKDIR /app
 COPY --from=build_base /build/speedtest ./
 COPY settings.toml ./
+
+# for network_mode: host
+RUN setcap 'cap_net_bind_service=+ep' /app/speedtest
 
 USER nobody
 EXPOSE 8989
