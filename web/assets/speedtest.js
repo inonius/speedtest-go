@@ -365,6 +365,12 @@ Speedtest.prototype = {
         this._settings.telemetry_extra = JSON.stringify({
           server: this._selectedServer.name
         });
+      this._settings.server =
+        this._selectedServer.server + this.selectedServer.name;
+      if (typeof this.speedtest_session_uuid !== "undefined") {
+        this._selectedServer.server + this._selectedServer.speedtest_session_uuid;
+      }
+
     }
     this._state = 3;
     this.worker.postMessage("start " + JSON.stringify(this._settings));

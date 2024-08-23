@@ -162,6 +162,9 @@ func Record(w http.ResponseWriter, r *http.Request) {
 	jitter := r.FormValue("jitter")
 	logs := r.FormValue("log")
 	extra := r.FormValue("extra")
+	speedtestSessionUUID := r.FormValue("speedtest_session_uuid")
+	server := r.FormValue("server")
+
 
 	if config.LoadedConfig().RedactIP {
 		ipAddr = "0.0.0.0"
@@ -181,6 +184,8 @@ func Record(w http.ResponseWriter, r *http.Request) {
 		record.ISPInfo = ispInfo
 	}
 	record.Extra = extra
+	record.Server = server
+	record.SpeedtestSessionUUID = speedtestSessionUUID
 	record.UserAgent = userAgent
 	record.Language = language
 	record.Download = download

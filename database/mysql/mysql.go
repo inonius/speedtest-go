@@ -28,8 +28,8 @@ func Open(hostname, username, password, database string) *MySQL {
 }
 
 func (p *MySQL) Insert(data *schema.TelemetryData) error {
-	stmt := `INSERT INTO speedtest_users (ip, ispinfo, extra, ua, lang, dl, ul, ping, jitter, log, uuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
-	_, err := p.db.Exec(stmt, data.IPAddress, data.ISPInfo, data.Extra, data.UserAgent, data.Language, data.Download, data.Upload, data.Ping, data.Jitter, data.Log, data.UUID)
+	stmt := `INSERT INTO speedtest_users (ip, ispinfo, server, speedtest_session_uuid, extra, ua, lang, dl, ul, ping, jitter, log, uuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
+	_, err := p.db.Exec(stmt, data.IPAddress, data.ISPInfo, data.Server, data.SpeedtestSessionUUID, data.Extra, data.UserAgent, data.Language, data.Download, data.Upload, data.Ping, data.Jitter, data.Log, data.UUID)
 	return err
 }
 
@@ -38,7 +38,7 @@ func (p *MySQL) FetchByUUID(uuid string) (*schema.TelemetryData, error) {
 	row := p.db.QueryRow(`SELECT * FROM speedtest_users WHERE uuid = ?`, uuid)
 	if row != nil {
 		var id string
-		if err := row.Scan(&id, &record.Timestamp, &record.IPAddress, &record.ISPInfo, &record.Extra, &record.UserAgent, &record.Language, &record.Download, &record.Upload, &record.Ping, &record.Jitter, &record.Log, &record.UUID); err != nil {
+		if err := row.Scan(&id, &record.Timestamp, &record.IPAddress, &record.ISPInfo, &record.Server, &record.SpeedtestSessionUUID, &record.Extra, &record.UserAgent, &record.Language, &record.Download, &record.Upload, &record.Ping, &record.Jitter, &record.Log, &record.UUID); err != nil {
 			return nil, err
 		}
 	}
@@ -56,7 +56,7 @@ func (p *MySQL) FetchLast100() ([]schema.TelemetryData, error) {
 
 		for rows.Next() {
 			var record schema.TelemetryData
-			if err := rows.Scan(&id, &record.Timestamp, &record.IPAddress, &record.ISPInfo, &record.Extra, &record.UserAgent, &record.Language, &record.Download, &record.Upload, &record.Ping, &record.Jitter, &record.Log, &record.UUID); err != nil {
+			if err := rows.Scan(&id, &record.Timestamp, &record.IPAddress, &record.ISPInfo, &record.Server, &record.SpeedtestSessionUUID, &record.Extra, &record.UserAgent, &record.Language, &record.Download, &record.Upload, &record.Ping, &record.Jitter, &record.Log, &record.UUID); err != nil {
 				return nil, err
 			}
 			records = append(records, record)

@@ -24,6 +24,8 @@ CREATE TABLE `speedtest_users` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip` text NOT NULL,
   `ispinfo` text,
+  `server` text,
+  `speedtest_session_uuid` text,
   `extra` text,
   `ua` text NOT NULL,
   `lang` text NOT NULL,
