@@ -1,0 +1,32 @@
+services:
+  speedtestgo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: speedtest-go
+    #image: ghcr.io/inonius/speedtest-go:debug
+    command: ["./speedtest","-c","settings.toml"]
+    ports: 
+      - "127.0.0.1:8989:8989"
+    volumes:
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime:ro
+      - type: bind
+        source: ./web/assets/
+        target: /app/assets/
+      - type: bind
+        source: ./settings.toml
+        target: /app/settings.toml
+      - type: bind
+        source: /tls/cert.pem
+        target: /app/tls/cert.pem
+      - type: bind
+        source: /tls/key.pem
+        target: /app/tls/key.pem
+#    network_mode: host
+networks:
+  default:
+    name: sample_default
+    external: true
+
